@@ -1,0 +1,635 @@
+/* src/components/DiffChecker/DiffChecker.css */
+
+.diff-checker-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background: var(--bg-primary);
+    overflow: auto;
+  }
+  
+  /* ========== INPUT SECTION ========== */
+  .input-section-main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .input-header-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .input-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .input-title svg {
+    color: var(--accent);
+    font-size: 14px;
+  }
+  
+  /* Panels - Matching JSON editor exactly */
+  .input-panels-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    min-height: 300px;
+  }
+  
+  .input-panel-main {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input-panel-main:hover {
+    border-color: var(--accent);
+  }
+  
+  .input-panel-main:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-light);
+  }
+  
+  /* Panel Toolbar - Matching JSON editor */
+  .panel-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .line-count-badge {
+    padding: 2px 8px;
+    background: var(--bg-tertiary);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+  
+  .toolbar-actions {
+    display: flex;
+    gap: 4px;
+  }
+  
+  /* Buttons - Matching .icon-button from JSON editor */
+  .toolbar-btn {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    position: relative;
+  }
+  
+  .toolbar-btn:hover:not(:disabled) {
+    background: var(--bg-tertiary);
+    color: var(--accent);
+  }
+  
+  .toolbar-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  /* Tooltips - Matching JSON editor */
+  .toolbar-btn:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .toolbar-btn.upload {
+    position: relative;
+  }
+  
+  .toolbar-btn.upload input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  /* Textarea - Matching Ace Editor styling */
+  .main-textarea {
+    flex: 1;
+    width: 100%;
+    min-height: 250px;
+    padding: 16px;
+    background: var(--bg-primary);
+    border: none;
+    color: var(--text-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+  }
+  
+  .main-textarea:focus {
+    outline: none;
+  }
+  
+  /* Action Buttons - Matching JSON editor style */
+  .action-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 0;
+  }
+  
+  .btn-find-difference {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-find-difference:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .btn-find-difference:disabled {
+    background: var(--bg-tertiary);
+    color: var(--text-tertiary);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .btn-clear {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .btn-clear:hover:not(:disabled) {
+    background: var(--error-bg);
+    color: var(--error-text);
+    border-color: var(--error-border);
+  }
+  
+  .btn-clear:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  /* Options - Matching JSON editor */
+  .options-container {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+  
+  .checkbox-option:hover {
+    background: var(--bg-secondary);
+  }
+  
+  .checkbox-option input {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  
+  /* ========== DIFF SECTION ========== */
+  .diff-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeIn 0.2s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Diff Header - Matching JSON editor */
+  .diff-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+  }
+  
+  .diff-stats {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .stat-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .stat-badge.removals {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  
+  .stat-badge.additions {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+  
+  /* Diff Actions - Matching JSON editor */
+  .diff-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .btn-icon:hover:not(:disabled) {
+    background: var(--bg-tertiary);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  
+  .btn-icon:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  /* Diff View Panels - Matching JSON editor exactly */
+  .diff-view-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    min-height: 400px;
+    max-height: 600px;
+  }
+  
+  .diff-panel-view {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .diff-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .panel-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .panel-line-count {
+    padding: 2px 8px;
+    background: var(--bg-tertiary);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+  
+  .diff-panel-content {
+    flex: 1;
+    overflow: auto;
+    background: var(--bg-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 8px 0;
+  }
+  
+  /* Diff Lines - Professional soft colors */
+  .diff-line {
+    display: flex;
+    min-height: 22px;
+    transition: background 0.1s;
+  }
+  
+  .diff-line:hover {
+    background: var(--bg-tertiary);
+  }
+  
+  .line-num {
+    width: 45px;
+    padding: 0 8px;
+    text-align: right;
+    color: var(--text-tertiary);
+    user-select: none;
+    border-right: 1px solid var(--border-color);
+    flex-shrink: 0;
+    font-size: 11px;
+    line-height: 22px;
+  }
+  
+  .line-content {
+    flex: 1;
+    padding: 0 12px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 22px;
+  }
+  
+  /* Git-style highlighting - Matching your existing theme */
+  .diff-line.removed {
+    background-color: rgba(239, 68, 68, 0.08);
+  }
+  
+  .diff-line.removed .line-num {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+  }
+  
+  .diff-line.removed .line-content {
+    color: #ef4444;
+  }
+  
+  .diff-line.added {
+    background-color: rgba(34, 197, 94, 0.08);
+  }
+  
+  .diff-line.added .line-num {
+    background-color: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+  }
+  
+  .diff-line.added .line-content {
+    color: #22c55e;
+  }
+  
+  .diff-line.unchanged .line-content {
+    color: var(--text-primary);
+  }
+  
+  .empty-panel {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-style: italic;
+  }
+  
+  /* Edit Again Button */
+  .edit-again-container {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  
+  .btn-edit-again {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .btn-edit-again:hover {
+    background: var(--bg-tertiary);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  
+  /* Legend - Matching JSON editor style */
+  .diff-legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .legend-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+  }
+  
+  .legend-box.removed {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+  }
+  
+  .legend-box.added {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: #22c55e;
+  }
+  
+  .legend-box.unchanged {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+  }
+  
+  /* Scrollbar Styling - Matching JSON editor exactly */
+  .main-textarea::-webkit-scrollbar,
+  .diff-panel-content::-webkit-scrollbar,
+  .input-panel-main::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .main-textarea::-webkit-scrollbar-track,
+  .diff-panel-content::-webkit-scrollbar-track,
+  .input-panel-main::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 5px;
+  }
+  
+  .main-textarea::-webkit-scrollbar-thumb,
+  .diff-panel-content::-webkit-scrollbar-thumb,
+  .input-panel-main::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 5px;
+  }
+  
+  .main-textarea::-webkit-scrollbar-thumb:hover,
+  .diff-panel-content::-webkit-scrollbar-thumb:hover,
+  .input-panel-main::-webkit-scrollbar-thumb:hover {
+    background: var(--text-tertiary);
+  }
+  
+  /* Responsive - Matching JSON editor */
+  @media (max-width: 1200px) {
+    .input-panels-main,
+    .diff-view-panels {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    .input-header-main {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    
+    .diff-header-section {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+    
+    .diff-stats {
+      justify-content: center;
+    }
+    
+    .diff-actions {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .diff-checker-wrapper {
+      padding: 12px;
+    }
+    
+    .action-buttons-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .diff-legend {
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  }
+  
+  /* Dark mode adjustments */
+  [data-theme="dark"] .diff-line.removed {
+    background-color: rgba(239, 68, 68, 0.15);
+  }
+  
+  [data-theme="dark"] .diff-line.added {
+    background-color: rgba(34, 197, 94, 0.15);
+  }
+  
+  [data-theme="dark"] .stat-badge.removals {
+    background: rgba(239, 68, 68, 0.2);
+  }
+  
+  [data-theme="dark"] .stat-badge.additions {
+    background: rgba(34, 197, 94, 0.2);
+  }

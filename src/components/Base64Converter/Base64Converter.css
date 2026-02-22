@@ -1,0 +1,509 @@
+/* ==================== */
+/* Base64 Converter Styles */
+/* ==================== */
+
+.base64-converter {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: var(--bg-primary);
+    overflow: hidden;
+  }
+  
+  .converter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .mode-selector {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  
+  .mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .mode-btn:hover:not(:disabled) {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .mode-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  
+  .mode-btn.active svg {
+    color: white;
+  }
+  
+  .mode-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  .swap-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 8px;
+  }
+  
+  .swap-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  
+  .swap-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  .converter-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .charset-select {
+    padding: 6px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .charset-select:hover {
+    border-color: var(--accent);
+  }
+  
+  .charset-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-light);
+  }
+  
+  .live-mode {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .live-mode input {
+    cursor: pointer;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+  }
+  
+  .converter-panels {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    min-height: 0;
+    overflow: hidden;
+  }
+  
+  .converter-panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  
+  .converter-panel:hover {
+    border-color: var(--accent);
+  }
+  
+  .panel-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  
+  .label-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .panel-icon {
+    color: var(--accent);
+    font-size: 14px;
+  }
+  
+  .stats-badge {
+    padding: 2px 8px;
+    background: var(--bg-primary);
+    border-radius: 12px;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    border: 1px solid var(--border-color);
+  }
+  
+  .panel-actions {
+    display: flex;
+    gap: 4px;
+  }
+  
+  .panel-actions button {
+    padding: 4px 8px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+  }
+  
+  .panel-actions button:hover:not(:disabled) {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  
+  .panel-actions button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  
+  .panel-actions button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  .copy-btn svg,
+  .clear-btn svg,
+  .download-btn svg {
+    font-size: 12px;
+  }
+  
+  .panel-content {
+    flex: 1;
+    padding: 12px;
+    min-height: 200px;
+    overflow: auto;
+  }
+  
+  .converter-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    padding: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: none;
+    transition: all 0.2s;
+  }
+  
+  .converter-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-light);
+  }
+  
+  .converter-textarea.output {
+    background: var(--bg-secondary);
+  }
+  
+  .converter-textarea.output:focus {
+    background: var(--bg-primary);
+  }
+  
+  .file-upload-area {
+    height: 100%;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    transition: all 0.2s;
+  }
+  
+  .file-upload-area:hover {
+    border-color: var(--accent);
+    background: var(--bg-secondary);
+  }
+  
+  .file-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .file-upload-label:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .file-upload-label:active {
+    transform: translateY(0);
+  }
+  
+  .file-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--bg-tertiary);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .file-name {
+    font-size: 12px;
+    color: var(--text-secondary);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .remove-file {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--error-bg);
+    border: 1px solid var(--error-border);
+    border-radius: 50%;
+    color: var(--error-text);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .remove-file:hover {
+    background: var(--error-border);
+    color: white;
+  }
+  
+  .drop-hint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+  }
+  
+  .panel-footer {
+    padding: 8px 12px;
+    background: var(--bg-tertiary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .convert-btn {
+    padding: 6px 16px;
+    background: var(--accent);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .convert-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .error-message {
+    padding: 10px 16px;
+    background: var(--error-bg);
+    border: 1px solid var(--error-border);
+    border-radius: 6px;
+    color: var(--error-text);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .error-icon {
+    font-size: 16px;
+    color: var(--error-border);
+  }
+  
+  .converter-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 11px;
+  }
+  
+  .info-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+  }
+  
+  .info-icon {
+    font-size: 14px;
+  }
+  
+  .shortcuts-hint {
+    color: var(--text-tertiary);
+  }
+  
+  .shortcuts-hint kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 10px;
+    margin: 0 2px;
+    color: var(--text-secondary);
+  }
+  
+  /* ==================== */
+  /* Responsive Design */
+  /* ==================== */
+  
+  @media (max-width: 1200px) {
+    .converter-panels {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .converter-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+    
+    .mode-selector {
+      justify-content: center;
+    }
+    
+    .converter-controls {
+      justify-content: space-between;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .base64-converter {
+      padding: 12px;
+    }
+    
+    .mode-selector {
+      flex-wrap: wrap;
+    }
+    
+    .panel-label {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .panel-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+    
+    .converter-footer {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+  }
+  
+  /* ==================== */
+  /* Dark Mode Adjustments */
+  /* ==================== */
+  
+  [data-theme="dark"] .mode-btn.active {
+    background: var(--accent);
+  }
+  
+  [data-theme="dark"] .file-upload-area:hover {
+    background: var(--bg-tertiary);
+  }
+  
+  [data-theme="dark"] .converter-textarea {
+    background: var(--bg-secondary);
+  }
+  
+  [data-theme="dark"] .converter-textarea:focus {
+    background: var(--bg-primary);
+  }
