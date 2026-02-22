@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/dev-tool-hub/static/css/main.a2bac225.css",
+    "main.js": "/dev-tool-hub/static/js/main.8f3df644.js",
+    "static/css/855.b1c672bb.chunk.css": "/dev-tool-hub/static/css/855.b1c672bb.chunk.css",
+    "static/js/855.f4759811.chunk.js": "/dev-tool-hub/static/js/855.f4759811.chunk.js",
+    "static/css/86.826c8910.chunk.css": "/dev-tool-hub/static/css/86.826c8910.chunk.css",
+    "static/js/86.9c6600e6.chunk.js": "/dev-tool-hub/static/js/86.9c6600e6.chunk.js",
+    "static/js/453.b23bed61.chunk.js": "/dev-tool-hub/static/js/453.b23bed61.chunk.js",
+    "static/js/662.2485296b.chunk.js": "/dev-tool-hub/static/js/662.2485296b.chunk.js",
+    "index.html": "/dev-tool-hub/index.html",
+    "main.a2bac225.css.map": "/dev-tool-hub/static/css/main.a2bac225.css.map",
+    "main.8f3df644.js.map": "/dev-tool-hub/static/js/main.8f3df644.js.map",
+    "855.b1c672bb.chunk.css.map": "/dev-tool-hub/static/css/855.b1c672bb.chunk.css.map",
+    "855.f4759811.chunk.js.map": "/dev-tool-hub/static/js/855.f4759811.chunk.js.map",
+    "86.826c8910.chunk.css.map": "/dev-tool-hub/static/css/86.826c8910.chunk.css.map",
+    "86.9c6600e6.chunk.js.map": "/dev-tool-hub/static/js/86.9c6600e6.chunk.js.map",
+    "453.b23bed61.chunk.js.map": "/dev-tool-hub/static/js/453.b23bed61.chunk.js.map",
+    "662.2485296b.chunk.js.map": "/dev-tool-hub/static/js/662.2485296b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a2bac225.css",
+    "static/js/main.8f3df644.js"
+  ]
+}
