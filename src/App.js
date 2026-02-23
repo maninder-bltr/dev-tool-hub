@@ -21,7 +21,7 @@ import CSVConverter from './components/CSVConverter/CSVConverter';
 import { ToolsProvider, useTools } from './components/Context/ToolsContext';
 import ToolSelector from './components/ToolSelector/ToolSelector';
 import ToolsContainer from './components/ToolsContainer/ToolsContainer';
-import Base64Converter from './components/Base64Converter/Base64Converter';
+import ProfileAndToolInfoWidget from './components/ProfileAndInfo/ProfileAndToolInfoWidget';
 
 import { validateJSON, formatJSON, minifyJSON, parseJSONSafe } from './utils/jsonUtils';
 import DiffChecker from './components/DiffChecker/DiffChecker';
@@ -248,6 +248,8 @@ function AppContent() {
             </div>
           </>
         )}
+
+      <ProfileAndToolInfoWidget />
       </div>
 
       {/* Main content area */}

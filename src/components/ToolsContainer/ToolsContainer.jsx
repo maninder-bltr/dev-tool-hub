@@ -1,11 +1,12 @@
 import React, { lazy, Suspense } from 'react';
-import { useTools } from '../Context/ToolsContext'; // Fixed path
+import { useTools } from '../Context/ToolsContext'; 
 
 // Lazy load tools for better performance
 const Base64Converter = lazy(() => import('../Base64Converter/Base64Converter'));
 const EpochCalculator = lazy(() => import('../EpochCalculator/EpochCalculator'));
 const DiffChecker = lazy(() => import('../DiffChecker/DiffChecker'));
 const ColorTool = lazy(() => import('../ColorTool/ColorTool'));
+const PdfTool = lazy(() => import('../PDF/PdfTool'));
 
 // Loading fallback
 const LoadingFallback = () => (
@@ -44,6 +45,12 @@ const ToolsContainer = () => {
             <ColorTool />
           </Suspense>
         );
+      case 'pdf':
+        return (
+          <Suspense fallback={<LoadingFallback />}>
+            <PdfTool />
+          </Suspense>
+        );  
       default:
         return null;
     }
