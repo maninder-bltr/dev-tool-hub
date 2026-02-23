@@ -111,7 +111,7 @@ If you want to run or contribute locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/devtools-hub.git
+git clone https://github.com/maninder-bltr/devtools-hub.git
 cd devtools-hub
 
 # Install dependencies
