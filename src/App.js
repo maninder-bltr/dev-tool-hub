@@ -10,12 +10,15 @@ import {
   FaPaintBrush, FaCompress, FaCheckCircle, FaExclamationCircle,
   FaFolderOpen, FaRegCopy, FaEraser
 } from 'react-icons/fa';
+import { FaJava } from 'react-icons/fa6';
 
 // Custom components
 import TreeView from './components/TreeView/JsonTree';
 import { DiffTree, computeDelta, countDiffs } from './components/DiffView';
 import FindReplace from './components/FindReplace/FindReplace';
 import CSVConverter from './components/CSVConverter/CSVConverter';
+import XMLConverter from './components/XMLConverter/XMLConverter';
+import POJOGenerator from './components/POJOGenerator/POJOGenerator';
 
 // New tool components
 import { ToolsProvider, useTools } from './components/Context/ToolsContext';
@@ -57,6 +60,8 @@ function AppContent() {
   const [showLeftFind, setShowLeftFind] = useState(false);
   const [showRightFind, setShowRightFind] = useState(false);
   const [showCSV, setShowCSV] = useState(false);
+  const [showXML, setShowXML] = useState(false);
+  const [showPOJO, setShowPOJO] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const leftEditorRef = useRef();
@@ -205,14 +210,6 @@ function AppContent() {
       {/* Global Toolbar */}
       <div className="global-toolbar">
         <ToolSelector />
-
-        <div className="toolbar-group">
-          <button onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
-            {theme === 'light' ? <FaMoon /> : <FaSun />}
-            <span>Theme</span>
-          </button>
-        </div>
-
         {/* Show JSON-specific tools only when JSON editor is active */}
         {activeTool === 'json' && (
           <>
@@ -249,16 +246,27 @@ function AppContent() {
               <button onClick={() => setShowCSV(true)} title="Convert CSV to JSON or JSON to CSV">
                 <FaFileCsv /> CSV
               </button>
+              <button onClick={() => setShowXML(true)} title="Convert XML to JSON or JSON to XML">
+                <FaCode /> XML
+              </button>
+              <button onClick={() => setShowPOJO(true)} title="Generate Java POJOs from JSON">
+                <FaJava /> POJO
+              </button>
             </div>
           </>
         )}
-
+        <div className="toolbar-group">
+          <button onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
+            {theme === 'light' ? <FaMoon /> : <FaSun />}
+            <span>Theme</span>
+          </button>
+        </div>
         <ProfileAndToolInfoWidget />
       </div>
 
       {/* Diff Header - Only show in diff mode */}
       {viewMode === 'diff' && delta && (
-        <div className="diff-header-container" style={{ 
+        <div className="diff-header-container" style={{
           marginBottom: '16px',
           padding: '12px 16px',
           background: 'var(--bg-secondary)',
@@ -271,7 +279,7 @@ function AppContent() {
           <div className="diff-summary" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
             {diffSummary.total > 0 ? (
               <>
-                <span style={{ 
+                <span style={{
                   padding: '4px 10px',
                   background: 'rgba(234, 179, 8, 0.15)',
                   color: '#b45309',
@@ -281,7 +289,7 @@ function AppContent() {
                 }}>
                   {diffSummary.modified} modified
                 </span>
-                <span style={{ 
+                <span style={{
                   padding: '4px 10px',
                   background: 'rgba(34, 197, 94, 0.15)',
                   color: '#15803d',
@@ -291,7 +299,7 @@ function AppContent() {
                 }}>
                   {diffSummary.added} added
                 </span>
-                <span style={{ 
+                <span style={{
                   padding: '4px 10px',
                   background: 'rgba(239, 68, 68, 0.15)',
                   color: '#b91c1c',
@@ -301,7 +309,7 @@ function AppContent() {
                 }}>
                   {diffSummary.removed} removed
                 </span>
-                <span style={{ 
+                <span style={{
                   fontWeight: '600',
                   color: 'var(--text-primary)',
                   fontSize: '13px'
@@ -630,6 +638,32 @@ function AppContent() {
       {showCSV && (
         <CSVConverter
           onClose={() => setShowCSV(false)}
+          onLoadJson={(json) => {
+            setLeftJson(json);
+            setViewMode('code');
+          }}
+        />
+      )}
+
+      {/* XML Converter modal */}
+      {showXML && (
+        <XMLConverter
+          onClose={() => setShowXML(false)}
+          onLoadJson={(json) => {
+            setLeftJson(json);
+            setViewMode('code');
+          }}
+          onLoadXml={(xml) => {
+            setLeftJson(xml);
+            setViewMode('code');
+          }}
+        />
+      )}
+
+      {/* POJO Generator modal */}
+      {showPOJO && (
+        <POJOGenerator
+          onClose={() => setShowPOJO(false)}
           onLoadJson={(json) => {
             setLeftJson(json);
             setViewMode('code');

@@ -23,9 +23,38 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
     }
   };
 
-  // Helper to check if value is nested (object or array)
-  const isNested = (value) => {
-    return value && typeof value === 'object' && Object.keys(value).length > 0;
+  // Convert object to array of key-value pairs for CSV
+  const objectToArray = (obj) => {
+    if (!obj || typeof obj !== 'object') return [obj];
+    
+    // If it's already an array, return it
+    if (Array.isArray(obj)) return obj;
+    
+    // Convert object to array of objects with key-value structure
+    const result = [];
+    
+    // Flatten the object to key-value pairs
+    const flattenForCSV = (data, prefix = '') => {
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        Object.keys(data).forEach(key => {
+          const value = data[key];
+          const newKey = prefix ? `${prefix}.${key}` : key;
+          
+          if (value && typeof value === 'object' && !Array.isArray(value)) {
+            flattenForCSV(value, newKey);
+          } else {
+            if (!result[0]) result[0] = {};
+            result[0][newKey] = value;
+          }
+        });
+      } else {
+        if (!result[0]) result[0] = {};
+        result[0][prefix] = data;
+      }
+    };
+    
+    flattenForCSV(obj);
+    return result;
   };
 
   // Flatten nested structures to JSON strings
@@ -38,10 +67,8 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
       const value = obj[key];
       
       if (Array.isArray(value)) {
-        // Convert arrays to JSON strings
         flattened[key] = value.length > 0 ? JSON.stringify(value) : '[]';
       } else if (value && typeof value === 'object') {
-        // Convert objects to JSON strings
         flattened[key] = Object.keys(value).length > 0 ? JSON.stringify(value) : '{}';
       } else {
         flattened[key] = value;
@@ -60,10 +87,8 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
       const value = obj[key];
       
       if (Array.isArray(value)) {
-        // Convert arrays to JSON strings
         result[newKey] = value.length > 0 ? JSON.stringify(value) : '[]';
       } else if (value && typeof value === 'object' && !Array.isArray(value)) {
-        // Recurse for nested objects
         deepFlattenObject(value, newKey, result);
       } else {
         result[newKey] = value;
@@ -145,15 +170,49 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
           
           const jsonData = JSON.parse(input);
           
+          // Check if it's an object (not an array) and offer to convert it
+          if (!Array.isArray(jsonData) && jsonData && typeof jsonData === 'object') {
+            // Offer to convert object to array of key-value pairs
+            const shouldConvert = window.confirm(
+              'Your JSON is an object, not an array. Do you want to convert it to an array of key-value pairs for CSV?'
+            );
+            
+            if (shouldConvert) {
+              const arrayData = objectToArray(jsonData);
+              
+              // Process the array data
+              let processedData;
+              if (flattenNested) {
+                processedData = arrayData.map(item => flattenObject(item));
+              } else {
+                processedData = arrayData.map(item => deepFlattenObject(item));
+              }
+
+              const csv = Papa.unparse(processedData, {
+                quotes: false,
+                quoteChar: '"',
+                escapeChar: '"',
+                delimiter: ',',
+                header: true,
+                newline: '\n',
+                skipEmptyLines: true
+              });
+
+              setOutput(csv);
+              setLoading(false);
+              return;
+            }
+          }
+          
           let dataToConvert = jsonData;
           
           // Find arrays in the JSON
           const arrays = findArraysInJson(jsonData);
           
           if (arrays.length === 0) {
-            setError('No arrays found in JSON. Please provide an array of objects.');
-            setLoading(false);
-            return;
+            // If no arrays found, treat the whole object as a single record
+            const singleRecordArray = [jsonData];
+            dataToConvert = singleRecordArray;
           } else if (arrays.length === 1) {
             dataToConvert = arrays[0].data;
           } else {
@@ -165,17 +224,15 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
           }
 
           if (!dataToConvert || dataToConvert.length === 0) {
-            throw new Error('Array is empty');
+            throw new Error('No data to convert');
           }
 
           // Process each item to handle nested structures
           let processedData;
           
           if (flattenNested) {
-            // Option 1: Flatten nested objects/arrays to JSON strings
             processedData = dataToConvert.map(item => flattenObject(item));
           } else {
-            // Option 2: Deep flatten (creates more columns but might lose structure)
             processedData = dataToConvert.map(item => deepFlattenObject(item));
           }
 
@@ -221,7 +278,6 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
         return;
       }
 
-      // Process nested data
       const processedData = flattenNested 
         ? selectedData.map(item => flattenObject(item))
         : selectedData.map(item => deepFlattenObject(item));
@@ -343,7 +399,7 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
               </label>
             )}
           </div>
-
+  
           {/* Input area */}
           <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
@@ -391,7 +447,7 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
               marginBottom: '16px'
             }}
           />
-
+  
           {/* Array selector for multiple arrays */}
           {showArraySelector && availableArrays.length > 0 && (
             <div style={{
@@ -450,7 +506,7 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
               </div>
             </div>
           )}
-
+  
           {/* Error display */}
           {error && (
             <div style={{ 
@@ -465,7 +521,7 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
               <strong>Error:</strong> {error}
             </div>
           )}
-
+  
           {/* Convert button */}
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
             <button 
@@ -480,7 +536,7 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
               {loading ? 'Converting...' : 'Convert'}
             </button>
           </div>
-
+  
           {/* Output area */}
           {output && (
             <>
@@ -512,7 +568,7 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
                   marginBottom: '16px'
                 }}
               />
-
+  
               {/* Action buttons */}
               <div className="modal-actions">
                 <button onClick={handleCopy} disabled={!output}>
@@ -528,7 +584,7 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
                 )}
                 <button onClick={onClose}>Close</button>
               </div>
-
+  
               {/* Info about nested data */}
               {mode === 'json2csv' && output.includes('"{') && (
                 <div style={{
@@ -552,3 +608,4 @@ const CSVConverter = ({ onClose, onLoadJson }) => {
 };
 
 export default CSVConverter;
+
