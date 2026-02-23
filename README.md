@@ -10,7 +10,7 @@
 
 ## 🚀 Quick Start
 
-**Access Online:** [[Deployment URL]](https://maninder-bltr.github.io/dev-tool-hub/)
+**Access Online:** [URL](https://maninder-bltr.github.io/dev-tool-hub/)
 
 **No installation needed!** Just open in your browser and start coding.
 
