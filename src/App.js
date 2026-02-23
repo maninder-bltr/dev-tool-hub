@@ -13,7 +13,7 @@ import {
 
 // Custom components
 import TreeView from './components/TreeView/JsonTree';
-import { DiffView, DiffTree, computeDelta } from './components/DiffView';
+import { DiffTree, computeDelta, countDiffs } from './components/DiffView';
 import FindReplace from './components/FindReplace/FindReplace';
 import CSVConverter from './components/CSVConverter/CSVConverter';
 
@@ -24,7 +24,6 @@ import ToolsContainer from './components/ToolsContainer/ToolsContainer';
 import ProfileAndToolInfoWidget from './components/ProfileAndInfo/ProfileAndToolInfoWidget';
 
 import { validateJSON, formatJSON, minifyJSON, parseJSONSafe } from './utils/jsonUtils';
-import DiffChecker from './components/DiffChecker/DiffChecker';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import './styles/themes.css';
 import './styles/main.css';
@@ -74,6 +73,11 @@ function AppContent() {
     }
     return null;
   }, [parsedLeft, parsedRight]);
+
+  // Get diff summary
+  const diffSummary = useMemo(() => {
+    return delta ? countDiffs(delta) : { added: 0, removed: 0, modified: 0, total: 0 };
+  }, [delta]);
 
   // Apply theme to document
   useEffect(() => {
@@ -249,8 +253,87 @@ function AppContent() {
           </>
         )}
 
-      <ProfileAndToolInfoWidget />
+        <ProfileAndToolInfoWidget />
       </div>
+
+      {/* Diff Header - Only show in diff mode */}
+      {viewMode === 'diff' && delta && (
+        <div className="diff-header-container" style={{ 
+          marginBottom: '16px',
+          padding: '12px 16px',
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-color)',
+          borderRadius: '8px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div className="diff-summary" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            {diffSummary.total > 0 ? (
+              <>
+                <span style={{ 
+                  padding: '4px 10px',
+                  background: 'rgba(234, 179, 8, 0.15)',
+                  color: '#b45309',
+                  borderRadius: '20px',
+                  fontSize: '13px',
+                  fontWeight: '500'
+                }}>
+                  {diffSummary.modified} modified
+                </span>
+                <span style={{ 
+                  padding: '4px 10px',
+                  background: 'rgba(34, 197, 94, 0.15)',
+                  color: '#15803d',
+                  borderRadius: '20px',
+                  fontSize: '13px',
+                  fontWeight: '500'
+                }}>
+                  {diffSummary.added} added
+                </span>
+                <span style={{ 
+                  padding: '4px 10px',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  color: '#b91c1c',
+                  borderRadius: '20px',
+                  fontSize: '13px',
+                  fontWeight: '500'
+                }}>
+                  {diffSummary.removed} removed
+                </span>
+                <span style={{ 
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                  fontSize: '13px'
+                }}>
+                  {diffSummary.total} total
+                </span>
+              </>
+            ) : (
+              <span style={{ color: 'var(--text-tertiary)', fontStyle: 'italic' }}>
+                No differences
+              </span>
+            )}
+          </div>
+
+          {diffSummary.total > 0 && (
+            <div className="diff-legend" style={{ display: 'flex', gap: '16px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                <span style={{ width: '12px', height: '12px', background: '#22c55e', opacity: 0.7, borderRadius: '3px' }}></span>
+                Added
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                <span style={{ width: '12px', height: '12px', background: '#ef4444', opacity: 0.7, borderRadius: '3px' }}></span>
+                Removed
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                <span style={{ width: '12px', height: '12px', background: '#eab308', opacity: 0.7, borderRadius: '3px' }}></span>
+                Modified
+              </span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Main content area */}
       {activeTool === 'json' ? (
@@ -359,13 +442,10 @@ function AppContent() {
                 <TreeView data={parsedLeft} />
               )}
 
-              {viewMode === 'diff' && (
-                <DiffChecker
-                  leftText={leftJson}
-                  rightText={rightJson}
-                  onLeftChange={setLeftJson}
-                  onRightChange={setRightJson}
-                />
+              {viewMode === 'diff' && parsedLeft && (
+                <div className="diff-panel-content">
+                  <DiffTree data={parsedLeft} delta={delta} side="left" />
+                </div>
               )}
             </div>
 
@@ -544,13 +624,6 @@ function AppContent() {
             <ToolsContainer />
           </div>
         </div>
-      )}
-
-      {/* Diff Header - Only show in diff mode */}
-      {viewMode === 'diff' && delta && (
-        <DiffView left={parsedLeft} right={parsedRight}>
-          {/* This is just for the header, children are rendered separately */}
-        </DiffView>
       )}
 
       {/* CSV Converter modal */}
