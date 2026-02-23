@@ -661,6 +661,11 @@ body {
   min-width: 200px;
 }
 
+.profile-widget {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 .tool-selector-button {
   display: flex;
   align-items: center;
@@ -853,7 +858,18 @@ body {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
+  .global-toolbar {
+    flex-wrap: wrap;
+  }
+  
+  .profile-widget {
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .base64-converter {
     padding: 12px;
   }

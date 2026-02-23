@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   FaCode, FaLock, FaClock, FaColumns, 
-  FaPalette, FaChevronDown, FaHistory 
+  FaPalette, FaChevronDown, FaHistory , FaFilePdf
 } from 'react-icons/fa'; // Removed FaLockOpen
 import { useTools } from '../Context/ToolsContext'
 
@@ -10,7 +10,8 @@ const tools = [
   { id: 'diff', name: 'Text Diff Checker', icon: FaColumns, description: 'Compare text side by side' },
   { id: 'base64', name: 'Base64 Converter', icon: FaLock, description: 'Encode/decode Base64 strings' },
   { id: 'epoch', name: 'Epoch Calculator', icon: FaClock, description: 'Convert between epoch and human dates' },
-  { id: 'color', name: 'Color Tools', icon: FaPalette, description: 'Color picker and converter' }
+  { id: 'color', name: 'Color Tools', icon: FaPalette, description: 'Color picker and converter' },
+  { id: 'pdf', name: 'PDF Tools', icon: FaFilePdf, description: 'Merge, split, sign PDFs'}
 ];
 
 const ToolSelector = () => {
